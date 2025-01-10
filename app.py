@@ -37,14 +37,14 @@ def get_text_chunks(text):
     return text_splitter.split_text(text)
 
 def get_vector_store(text_chunks):
-    """Create and save the vector store."""
-    st.write("in get vectore store")
-    embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
-    vector_store = FAISS.from_texts(text_chunks, embedding=embeddings)
-    st.write("Vector store created, saving locally...")
-    vector_store.save_local("faiss_index")
-    st.success("Vector store saved successfully.")
-    vector_store.save_local("faiss_index")
+    try:
+        vector_store = FAISS.from_texts(text_chunks, embedding=embeddings)
+        st.write("Vector store created successfully.")
+        vector_store.save_local("faiss_index")
+        st.success("Vector store saved successfully.")
+    except Exception as e:
+        st.error(f"Error creating or saving vector store: {e}")
+
 
 def load_vector_store():
     st.write("in load_vector_store")
