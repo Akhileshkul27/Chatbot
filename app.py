@@ -95,6 +95,7 @@ def main():
 
     # Automatically extract text from the predefined PDF
     raw_text = extract_text_from_pdf(pdf_path)
+    st.write("Extracted Text:", raw_text[:1000])  # Displaying a small portion of the extracted text for debugging
     text_chunks = get_text_chunks(raw_text)
     get_vector_store(text_chunks)
     st.success("PDF processed and vector store created.")
