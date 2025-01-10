@@ -46,8 +46,12 @@ def get_vector_store(text_chunks):
         st.write(f"Number of chunks used: {len(sample_chunks)}")
         
         # Create embeddings object
-        embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
-        st.write("Embeddings created.")
+        try:
+            embeddings = GoogleGenerativeAIEmbeddings(model="textembedding-gecko")
+            st.write("Embeddings initialized successfully.")
+        except Exception as e:
+            st.error(f"Error initializing embeddings: {e}")
+
         
         # Create FAISS vector store from the text chunks
         vector_store = FAISS.from_texts(sample_chunks, embedding=embeddings)
