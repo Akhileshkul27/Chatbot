@@ -48,7 +48,7 @@ def get_vector_store(text_chunks):
         # Create embeddings object
         try:
             st.write("before embedding")
-            embeddings = GoogleGenerativeAIEmbeddings(model="textembedding-gecko")
+            embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
             st.write("Embeddings initialized successfully.")
         except Exception as e:
             st.error(f"Error initializing embeddings: {e}")
