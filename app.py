@@ -32,7 +32,7 @@ def get_text_chunks(text):
     st.write("in get text chunks")
     """Split the extracted text into smaller chunks."""
     text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=10, chunk_overlap=1
+        chunk_size=1, chunk_overlap=1
     )
     return text_splitter.split_text(text)
 
