@@ -37,6 +37,9 @@ def get_vector_store(text_chunks):
     """Create and save the vector store."""
     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
     vector_store = FAISS.from_texts(text_chunks, embedding=embeddings)
+    st.write("Vector store created, saving locally...")
+    vector_store.save_local("faiss_index")
+    st.success("Vector store saved successfully.")
     vector_store.save_local("faiss_index")
 
 def load_vector_store():
