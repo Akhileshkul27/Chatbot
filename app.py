@@ -42,6 +42,8 @@ def get_vector_store(text_chunks):
     
     try:
         # Create embeddings object
+        st.write(f"Number of text chunks: {len(text_chunks)}")
+        st.write(f"First chunk preview: {text_chunks[0][:500]}")  # Preview of the first chunk
         embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
         st.write("Embeddings created.")
         
