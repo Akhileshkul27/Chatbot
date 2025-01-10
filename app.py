@@ -20,8 +20,6 @@ genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 pdf_path = 'Sudarshan Saur Shakti Pvt.pdf'
 
 def extract_text_from_pdf(pdf_path):
-    st.write("in extract_text_from_pdf")
-
     with pdfplumber.open(pdf_path) as pdf:
         text = ""
         for page in pdf.pages:
@@ -31,35 +29,15 @@ def extract_text_from_pdf(pdf_path):
 def get_text_chunks(text):
     """Split the extracted text into smaller chunks."""
     text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=2000, chunk_overlap=1000
+        chunk_size=10000, chunk_overlap=1000
     )
     return text_splitter.split_text(text)
 
 def get_vector_store(text_chunks):
     """Create and save the vector store."""
-    
-    try:
-        # Test with a small subset of chunks (for debugging)
-        # Create embeddings object
-        try:
-            st.write("before embedding")
-            embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
-            st.write("Embeddings initialized successfully.")
-        except Exception as e:
-            st.error(f"Error initializing embeddings: {e}")
-
-        
-        # Create FAISS vector store from the text chunks
-        vector_store = FAISS.from_texts(sample_chunks, embedding=embeddings)
-        st.write("Vector store created.")
-        
-        # Save the vector store to disk
-        vector_store.save_local("faiss_index")
-        st.success("Vector store saved successfully.")
-        
-    except Exception as e:
-        st.error(f"Error creating or saving vector store: {e}")
-
+    embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+    vector_store = FAISS.from_texts(text_chunks, embedding=embeddings)
+    vector_store.save_local("faiss_index")
 
 def load_vector_store():
     """Load an existing vector store."""
@@ -117,7 +95,6 @@ def main():
 
     # Automatically extract text from the predefined PDF
     raw_text = extract_text_from_pdf(pdf_path)
-    st.write("Extracted Text:", raw_text[:1000])  # Displaying a small portion of the extracted text for debugging
     text_chunks = get_text_chunks(raw_text)
     get_vector_store(text_chunks)
     st.success("PDF processed and vector store created.")
