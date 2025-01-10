@@ -20,6 +20,8 @@ genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 pdf_path = 'Sudarshan Saur Shakti Pvt.pdf'
 
 def extract_text_from_pdf(pdf_path):
+    st.write("in extract_text_from_pdf")
+
     with pdfplumber.open(pdf_path) as pdf:
         text = ""
         for page in pdf.pages:
@@ -27,6 +29,7 @@ def extract_text_from_pdf(pdf_path):
     return text
 
 def get_text_chunks(text):
+    st.write("in get text chunks")
     """Split the extracted text into smaller chunks."""
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=10000, chunk_overlap=1000
@@ -35,6 +38,7 @@ def get_text_chunks(text):
 
 def get_vector_store(text_chunks):
     """Create and save the vector store."""
+    st.write("in get vectore store")
     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
     vector_store = FAISS.from_texts(text_chunks, embedding=embeddings)
     st.write("Vector store created, saving locally...")
@@ -43,6 +47,7 @@ def get_vector_store(text_chunks):
     vector_store.save_local("faiss_index")
 
 def load_vector_store():
+    st.write("in load_vector_store")
     """Load an existing vector store."""
     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
     return FAISS.load_local(
@@ -50,6 +55,7 @@ def load_vector_store():
     )
 
 def get_conversational_chain():
+    st.write("in get_conversational_chain")
     """Create the conversational chain."""
     prompt_template = """
     You are an intelligent assistant tasked with answering user questions as comprehensively as possible.
@@ -69,6 +75,7 @@ def get_conversational_chain():
     return load_qa_chain(model, chain_type="stuff", prompt=prompt)
 
 def user_input(user_question):
+    st.write("in user_input")
     """Process user input and provide responses."""
     vector_store = load_vector_store()
     docs = vector_store.similarity_search(user_question, k=3)
