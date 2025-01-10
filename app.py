@@ -19,6 +19,63 @@ genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 # Predefined path to the PDF file
 pdf_path = 'Sudarshan Saur Shakti Pvt.pdf'
 
+# CSS styling for the page
+st.markdown("""
+    <style>
+        body {
+            background-color: #f4f6f9;
+            font-family: 'Arial', sans-serif;
+        }
+        .header {
+            text-align: center;
+            color: #333;
+            padding: 10px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .chat-box {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .ai-response {
+            background-color: #e0f7fa;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 16px;
+            color: #00796b;
+            margin-bottom: 15px;
+        }
+        .user-query {
+            background-color: #ffffff;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 16px;
+            color: #004d40;
+            margin-bottom: 15px;
+        }
+        .submit-btn {
+            background-color: #00796b;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .submit-btn:hover {
+            background-color: #004d40;
+        }
+        .footer {
+            text-align: center;
+            font-size: 14px;
+            color: #777;
+            margin-top: 50px;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
 def extract_text_from_pdf(pdf_path):
     with pdfplumber.open(pdf_path) as pdf:
         text = ""
@@ -85,13 +142,11 @@ def user_input(user_question):
         secondary_response = secondary_model({"question": user_question})
         st.write("Additional Insights: ", secondary_response["output_text"])
 
-    st.write("Reply: ", response["output_text"])
-
+    st.markdown(f"<div class='ai-response'>{response['output_text']}</div>", unsafe_allow_html=True)
 
 def main():
     """Main Streamlit app."""
-    st.set_page_config("Chat PDF")
-    st.header("Chat with PDF using Gemini💁")
+    st.markdown("<div class='header'>AI Assistant for Business Insights</div>", unsafe_allow_html=True)
 
     # Automatically extract text from the predefined PDF
     raw_text = extract_text_from_pdf(pdf_path)
@@ -100,9 +155,13 @@ def main():
     st.success("PDF processed and vector store created.")
 
     # User input to query the PDF
-    user_question = st.text_input("Ask a Question from the PDF Files")
+    user_question = st.text_input("Ask a Business Question", key="question")
     if user_question:
+        st.markdown(f"<div class='user-query'>{user_question}</div>", unsafe_allow_html=True)
         user_input(user_question)
+
+    # Footer
+    st.markdown("<div class='footer'>Powered by AI - Sudarshan Saur Shakti Pvt. Ltd.</div>", unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
