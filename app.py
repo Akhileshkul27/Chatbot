@@ -41,24 +41,24 @@ def get_vector_store(text_chunks):
     st.write("in get vector store")
     
     try:
+        # Test with a small subset of chunks (for debugging)
+        sample_chunks = text_chunks[:3]  # Use only the first 3 chunks for testing
+        st.write(f"Number of chunks used: {len(sample_chunks)}")
+        
         # Create embeddings object
-        st.write(f"Number of text chunks: {len(text_chunks)}")
-        st.write(f"First chunk preview: {text_chunks[0][:500]}")  # Preview of the first chunk
         embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
         st.write("Embeddings created.")
         
         # Create FAISS vector store from the text chunks
-        vector_store = FAISS.from_texts(text_chunks, embedding=embeddings)
+        vector_store = FAISS.from_texts(sample_chunks, embedding=embeddings)
         st.write("Vector store created.")
         
         # Save the vector store to disk
-        st.write("Saving vector store locally...")
         vector_store.save_local("faiss_index")
         st.success("Vector store saved successfully.")
         
     except Exception as e:
         st.error(f"Error creating or saving vector store: {e}")
-
 
 
 def load_vector_store():
