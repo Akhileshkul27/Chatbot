@@ -29,7 +29,6 @@ def extract_text_from_pdf(pdf_path):
     return text
 
 def get_text_chunks(text):
-    st.write("in get text chunks")
     """Split the extracted text into smaller chunks."""
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=2000, chunk_overlap=1000
@@ -38,13 +37,9 @@ def get_text_chunks(text):
 
 def get_vector_store(text_chunks):
     """Create and save the vector store."""
-    st.write("in get vector store")
     
     try:
         # Test with a small subset of chunks (for debugging)
-        sample_chunks = text_chunks[:3]  # Use only the first 3 chunks for testing
-        st.write(f"Number of chunks used: {len(sample_chunks)}")
-        
         # Create embeddings object
         try:
             st.write("before embedding")
@@ -67,7 +62,6 @@ def get_vector_store(text_chunks):
 
 
 def load_vector_store():
-    st.write("in load_vector_store")
     """Load an existing vector store."""
     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
     return FAISS.load_local(
@@ -75,7 +69,6 @@ def load_vector_store():
     )
 
 def get_conversational_chain():
-    st.write("in get_conversational_chain")
     """Create the conversational chain."""
     prompt_template = """
     You are an intelligent assistant tasked with answering user questions as comprehensively as possible.
@@ -95,7 +88,6 @@ def get_conversational_chain():
     return load_qa_chain(model, chain_type="stuff", prompt=prompt)
 
 def user_input(user_question):
-    st.write("in user_input")
     """Process user input and provide responses."""
     vector_store = load_vector_store()
     docs = vector_store.similarity_search(user_question, k=3)
